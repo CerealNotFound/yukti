@@ -10,12 +10,19 @@ import {
 } from "@/components/ui/card";
 import { Clock, PlusCircle } from "lucide-react";
 import { formatLastActivity } from "@/utils/format-last-active/formatLastActivity";
-import { Board } from "@/utils/types/boards/boards";
+import { Board, BoardWithAuthor } from "@/utils/types/boards/boards";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function BoardCard({ cards }: { cards: Board[] }) {
+export default function BoardCard({ cards }: { cards: BoardWithAuthor[] }) {
   // Check if cards array contains any empty IDs (loading state)
   const isLoading = cards.some((card) => card.id === "");
+
+  const truncateDescription = (description: string) => {
+    if (description.length > 70) {
+      return description.slice(0, 70) + "...";
+    }
+    return description;
+  };
 
   if (isLoading) {
     return (
@@ -54,9 +61,6 @@ export default function BoardCard({ cards }: { cards: Board[] }) {
         <a key={board.id} href={`/boards/${board.id}`}>
           <Card className="w-[18rem] h-[15rem] mt-1 overflow-hidden">
             <CardHeader className="flex flex-row justify-between items-start">
-              {/* <Badge variant="outline" className="text-xs">
-              {board.category || "General"}
-            </Badge> */}
               <div className="flex items-center  text-xs">
                 <Clock className="h-4 w-4 mr-1" />
                 {formatLastActivity(board.last_activity)}
@@ -64,7 +68,9 @@ export default function BoardCard({ cards }: { cards: Board[] }) {
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
               <p className="font-bold text-xs leading-tight">{board.title}</p>
-              <p className="text-xs leading-relaxed ">{board.description}</p>
+              <p className="text-xs leading-relaxed ">
+                {truncateDescription(board.description)}
+              </p>
               <div className="flex flex-wrap gap-1">
                 {board.labels.map((label) => (
                   <Badge key={label} variant="outline" className="text-xs">
@@ -74,8 +80,9 @@ export default function BoardCard({ cards }: { cards: Board[] }) {
               </div>
             </CardContent>
             <CardFooter>
-              <div>
-                <p className="text-xs font-medium">{board.author}</p>
+              <div className="mb-2">
+                <p className="text-xs font-medium">{board.users.name}</p>
+                <p className="text-xs text-gray-400">{board.users.email}</p>
               </div>
             </CardFooter>
           </Card>
