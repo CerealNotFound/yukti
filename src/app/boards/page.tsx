@@ -7,11 +7,33 @@ import { KanbanSquare, UserCircle2 } from "lucide-react";
 import { useBoards } from "@/context/boards-context";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useUser } from "@/context/user-context";
 
 const Boards = () => {
   const { boards, setBoards } = useBoards();
+  const { setUser } = useUser();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/user/getUser", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user");
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setUser(data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
     const fetchData = async () => {
       try {
         const response = await fetch("/api/boards/getAllBoards", {
@@ -32,6 +54,8 @@ const Boards = () => {
         console.error("Error fetching boards:", error);
       }
     };
+
+    fetchUser();
     fetchData();
   }, []);
 
@@ -47,6 +71,7 @@ const Boards = () => {
           <KanbanSquare />
           <h1 className="font-bold font-[Raleway]">Your Boards</h1>
         </div>
+        
         <BoardCard cards={boards} />
       </div>
     </div>

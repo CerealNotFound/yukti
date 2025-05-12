@@ -18,13 +18,22 @@ export interface BoardWithAuthor {
   description: string;
   created_at: string;
   last_activity: string;
-  who_can_see: 'everyone' | string; // You may want to make this more specific with allowed values
+  who_can_see: "everyone" | string; // You may want to make this more specific with allowed values
   labels: string[];
   is_starred: boolean;
-  status: 'active' | string; // You may want to make this more specific with allowed values
+  status: "active" | string; // You may want to make this more specific with allowed values
   category: string;
   users: {
     name: string;
     email: string;
   };
+}
+
+export interface CreateBoard {
+  title: string;
+  description: string;
+  author: string;
+  who_can_see: string; //we use a dropdown, no need for enums
+  labels: string[];
+  category: string;
 }

@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import AppSidebar from "@/components/Sidebar/Sidebar";
 import { BoardsProvider } from "@/context/boards-context";
+import { UserProvider } from "@/context/user-context";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -41,12 +42,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <AppSidebar />
-            <SidebarTrigger className="mt-2" />
-            <BoardsProvider>
-
-            {children}
-            </BoardsProvider>
+            <UserProvider>
+              <AppSidebar />
+              <SidebarTrigger className="mt-2" />
+              <BoardsProvider>{children}</BoardsProvider>
+            </UserProvider>
             <Toaster />
           </ThemeProvider>
         </SidebarProvider>
